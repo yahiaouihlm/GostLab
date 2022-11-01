@@ -1,6 +1,5 @@
 package fr.parisuniversity.serveur;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -52,6 +51,9 @@ public class Lobby implements Runnable {
                     System.out.println(getListFromGame(pnumgame));
                     break;
 
+                case "QUIT!":
+                    saftyExitPlayer();
+                    break;
                 case "START":
                     try {
                         initBuffer();
