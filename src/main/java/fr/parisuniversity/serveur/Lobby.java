@@ -220,12 +220,13 @@ public class Lobby implements Runnable {
     public String createGame(String name, String port) {
         this.initBuffer();
         try {
-            System.out.println("je suis  la dans  la createGame");
+
             // vérifier si le port est valide
             if (!iSvalidePort(port) || (name.trim().length() == 0)) {
                 this.messages.put(new String("REGNO***").getBytes());
                 this.socketClient.getOutputStream().write(this.messages.array(), 0, 8);
                 this.socketClient.getOutputStream().flush();
+                System.out.println("je suis lma");
                 return new String("REGNO***");
             }
             // si le jouer et deja inscrit
@@ -233,9 +234,11 @@ public class Lobby implements Runnable {
                 this.messages.put(new String("REGNO***").getBytes());
                 this.socketClient.getOutputStream().write(messages.array(), 0, 8);
                 this.socketClient.getOutputStream().flush();
+
                 return new String("REGNO***");
             }
             synchronized (AppServeur.games) {
+
                 // pas plus de 100 parties
                 if (AppServeur.games.size() >= 99) {
                     this.messages.put(new String("REGNO***").getBytes());
@@ -248,7 +251,9 @@ public class Lobby implements Runnable {
                     Game game = new Game();
                     this.gameNumber = game.getnumGame();
                     this.player = new Player(name, port, socketClient);
+
                     if (game.addPlayertoGame(player)) {
+                        System.out.println(this.player.getNam());
                         this.messages.put(new String("REGOK ").getBytes());
                         AppServeur.games.add(game);
                         this.messages.put(game.getnumGame());
@@ -256,8 +261,9 @@ public class Lobby implements Runnable {
 
                         this.socketClient.getOutputStream().write(this.messages.array(), 0, 10);
                         this.socketClient.getOutputStream().flush();
-                        return "REGOK " + String.valueOf(game) + "***";
+                        return "REGOK " + String.valueOf(game.getnumGame()) + "***";
                     } else {
+
                         this.messages.put(new String("REGNO***").getBytes());
                         this.socketClient.getOutputStream().write(this.messages.array(), 0, 8);
                         this.socketClient.getOutputStream().flush();
