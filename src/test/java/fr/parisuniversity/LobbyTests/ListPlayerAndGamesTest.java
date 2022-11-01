@@ -46,7 +46,7 @@ public class ListPlayerAndGamesTest {
    * initialisation de la game apres chaque test
    ***************************************/
   @AfterEach
-  void initListAndSocket() {
+  void initListGames() {
     AppServeur.games.clear();
     Game.idGame = 0;
   }

@@ -126,7 +126,7 @@ public class Lobby implements Runnable {
         return messageSended;
     }
 
-    private void joinGame(String name, String port, Byte pgamenumber) {
+    public String joinGame(String name, String port, Byte pgamenumber) {
         initBuffer();
         try {
             if ((!iSvalidePort(port) || (name.trim().length() == 0) || (pgamenumber >= 99) || pgamenumber < 0)
@@ -134,7 +134,8 @@ public class Lobby implements Runnable {
                 this.messages.put(new String("REGNO***").getBytes());
                 this.socketClient.getOutputStream().write(this.messages.array(), 0, 8);
                 this.socketClient.getOutputStream().flush();
-                return;
+                if (this.player == null)
+                    return new String("REGNO***");
             }
             synchronized (AppServeur.games) {
                 this.player = new Player(name, port, socketClient);
@@ -145,7 +146,7 @@ public class Lobby implements Runnable {
                     this.socketClient.getOutputStream().write(messages.array(), 0, 8);
                     this.socketClient.getOutputStream().flush();
                     this.player = null;
-                    return;
+                    return new String("REGNO***");
                 }
                 // Si La game qui veut rejoindre est déja commencé ou bien il est plaine (pas
                 // commencer)
@@ -154,7 +155,7 @@ public class Lobby implements Runnable {
                     this.socketClient.getOutputStream().write(messages.array(), 0, 8);
                     this.socketClient.getOutputStream().flush();
                     this.player = null;
-                    return;
+                    return new String("REGNO***");
                 }
                 // sinon accepter son inscription
                 this.gameNumber = pgamenumber;
@@ -164,13 +165,15 @@ public class Lobby implements Runnable {
                 this.messages.put(new String("***").getBytes());
                 this.socketClient.getOutputStream().write(this.messages.array(), 0, 10);
                 this.socketClient.getOutputStream().flush();
-                return;
+                return "REGOK" + String.valueOf(gameNumber) + "***";
 
             }
 
         } catch (Exception e) {
             saftyExitPlayer();
         }
+
+        return new String("REGNO***");
     }
 
     private void unregestrationFromGame() {

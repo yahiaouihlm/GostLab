@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import fr.parisuniversity.serveur.*;
 
-public class CreateGametest {
+public class CreateGameTest {
 
     /********************************
      * Simulateur de Server
@@ -37,7 +37,7 @@ public class CreateGametest {
      * l'initialisation de la listes des games apres avant test
      ***********************************************************/
     @AfterEach
-    void initListAndSocket() {
+    void initListGames() {
         AppServeur.games.clear();
         Game.idGame = 0;
     }
