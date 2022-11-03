@@ -17,6 +17,7 @@ public class Client {
         this.userName = userName;
         this.port = port;
         Scanner scanner = new Scanner(System.in);
+        gameHandler();
         boolean startedFlage = false;
         while (!startedFlage) {
             /// afficher le menu de commande
@@ -24,7 +25,6 @@ public class Client {
                 case "NEWPL":
                     sendNewGame();
                     readServerResposeToNewAndJoinGame();
-
                     break;
 
                 case "REGIS":
@@ -36,11 +36,49 @@ public class Client {
                     unregestrationFromGame();
                     break;
 
+                case "GAME?":
+
+                    break;
             }
 
         }
         scanner.close();
 
+    }
+
+    public void sendListGames() {
+        try {
+            initBuffer();
+            String game_mess = "GAME?***";
+            this.messages.put(game_mess.getBytes());
+            this.socket.getOutputStream().write(this.messages.array(), 0, this.messages.position());
+            this.socket.getOutputStream().flush();
+            gameHandler();
+        } catch (IOException e) {
+            ToQuit();
+        }
+
+    }
+
+    public void gameHandler() {
+        try {
+            readyServerResponse(10);
+            byte numbersGames = this.messages.get(6);
+            String message = new String(this.messages.array(), 0, 6) + numbersGames
+                    + new String(this.messages.array(), 7, 3);
+            System.out.println(message);
+            for (int i = 0; i < numbersGames; i++) {
+                readyServerResponse(12);
+                byte gamesNumber = this.messages.get(6);
+                byte playersNumber = this.messages.get(8);
+                String OGAME_mess = readInstruction() + new String(this.messages.array(), 5, 1) + gamesNumber
+                        + new String(this.messages.array(), 7, 1) + playersNumber
+                        + new String(this.messages.array(), 9, 3);
+                System.out.println(OGAME_mess);
+            }
+        } catch (Exception e) {
+            ToQuit();
+        }
     }
 
     public void unregestrationFromGame() {
