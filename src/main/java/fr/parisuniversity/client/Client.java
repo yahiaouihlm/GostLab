@@ -13,15 +13,27 @@ public class Client {
     private String userName;
 
     public Client(Socket socket, String userName, String port) {
+
         this.socket = socket;
         this.userName = userName;
         this.port = port;
-        Scanner scanner = new Scanner(System.in);
+    }
+
+    public void goStart() {
         gameHandler();
+        Scanner scanner = new Scanner(System.in);
         boolean startedFlage = false;
-        while (!startedFlage) {
+        while (startedFlage == false) {
             /// afficher le menu de commande
-            switch (scanner.next()) {
+            String test = null;
+            // if (scanner.hasNext())
+            while (!scanner.hasNextLine())
+                test = scanner.nextLine();
+
+            System.out.println("je quitte");
+            System.exit(1);
+
+            switch (test) {
                 case "NEWPL":
                     sendNewGame();
                     readServerResposeToNewAndJoinGame();
@@ -37,13 +49,12 @@ public class Client {
                     break;
 
                 case "GAME?":
-
+                    sendListGames();
                     break;
             }
 
         }
         scanner.close();
-
     }
 
     public void sendListGames() {
@@ -69,6 +80,7 @@ public class Client {
             System.out.println(message);
             for (int i = 0; i < numbersGames; i++) {
                 readyServerResponse(12);
+                System.out.println(this.messages.toString());
                 byte gamesNumber = this.messages.get(6);
                 byte playersNumber = this.messages.get(8);
                 String OGAME_mess = readInstruction() + new String(this.messages.array(), 5, 1) + gamesNumber
@@ -77,6 +89,7 @@ public class Client {
                 System.out.println(OGAME_mess);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             ToQuit();
         }
     }

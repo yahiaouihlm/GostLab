@@ -8,7 +8,7 @@ public class MainClient {
 
     public static void main(String[] args) {
         String serverIpAdresse = "localhost";
-        String port = "4141";
+        String port = "4242";
         if (args.length >= 1)
             serverIpAdresse = args[0];
         if (args.length == 2)
@@ -18,9 +18,11 @@ public class MainClient {
             }
         Socket socketClient = null;
         int portNum = Integer.parseInt(port);
+        System.out.println(serverIpAdresse + " " + portNum);
         try {
             socketClient = new Socket(serverIpAdresse, portNum);
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Can Not Make Socket Communication, Please Check Your NetWork Or Server Address");
             System.exit(1);
         }
@@ -29,7 +31,7 @@ public class MainClient {
         String userName;
         while (true) {
             System.out.println("Enter Your Name :");
-            scanner = sc.next();
+            userName = scanner.next();
             if (userName.length() <= 8)
                 break;
         }
@@ -42,8 +44,8 @@ public class MainClient {
             if (port.length() == 4)
                 break;
         }
-        scanner.close();
         Client client = new Client(socketClient, userName, port);
+        client.goStart();
 
     }
 
